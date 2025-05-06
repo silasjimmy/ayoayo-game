@@ -1,0 +1,11 @@
+Initial Reflection:
+
+When i first viewed the Ayoayo game assignment, i first checked the Ayoayo rules file to understand the game play and rules. I familiarized myself with the game by running a physical simulation where i played both players to further understand the logic flow. My first thought was to focus on understanding the specific rules and mechanics that make Ayoayo unique, such as its counter-clockwise movement and capture rules. I planned to approach the project by breaking the rules down into clearly structured steps and possibly modeling them in code or simulations to test gameplay scenarios. The initial goal was to ensure I could accurately represent and explain each phase of the game, from setup to endgame, while highlighting any strategic depth.
+
+Final Reflection:
+
+After working through the Ayoayo project, I found that while the basic rules were straightforward, several nuanced mechanics required deeper understanding, especially the capture mechanic and the bonus turn rule when a seed lands in the store. I had to take a step back to view the mechanics of the game as objects and their interactions with each other.
+
+I came up with the Ayoayo and Player objects. The Ayoayo class required a bit detailed logic to control the game flow as well as enforce the game rules. One significant change to my initial plan was spending more time mapping out move sequences and testing how the rules played out in edge cases. A challenge I encountered was maintaining clarity when explaining rules that rely on board position, i.e. which pit is opposite another. The visual-spatial component of Ayoayo was more important than I initially expected.
+
+My key takeaways include a greater appreciation for the strategic depth of seemingly simple games, and how traditional games can be rich in logic and design. I also learned how critical it is to express rules clearly and consistently, particularly for games with special conditions that affect turn order and resource capture. It was a really engaging assignment where i got to apply my programming skills as well as best software engineering principles to implement the Ayoayo game.
