@@ -8,10 +8,10 @@ PLAYER_TWO_PIT_INDICIES = [7, 8, 9, 10, 11, 12]
 
 
 class Ayoayo():
-    def __init__(self) -> None:
+    def __init__(self, player_one: Any, player_two: Any) -> None:
         self.board = []
-        self.player_one = None
-        self.player_two = None
+        self.player_one = player_one
+        self.player_two = player_two
 
         self.create_board()
 
@@ -28,7 +28,7 @@ class Ayoayo():
                 self.board.append(0)
             else:
                 # Set the pits to 4 seeds each
-                self.board.append(4)
+                self.board.append(3)
 
     '''
     Updates the board state once a player makes a move
@@ -40,7 +40,7 @@ class Ayoayo():
         drop_index (int): the last pit index the player has sowed their seed
     '''
 
-    def update_board(self, start_index) -> int:
+    def update_board(self, start_index: int) -> int:
         # Get the number of seeds from the selected pit
         seeds = self.board[start_index]
 
@@ -94,19 +94,86 @@ class Ayoayo():
             '''.format(self.board[6], self.board[:6], self.board[13], self.board[7:13])
         )
 
-    def return_winner(self):
-        return 'winner'
+    '''
+    Determines the winner of the game
+
+    Return:
+        (obj) a Player object if either player is the winner, None if it is a tie
+    '''
+
+    def return_winner(self) -> Any:
+        player_one_total = sum(self.board[:7])
+        player_two_total = sum(self.board[7:])
+
+        if player_one_total > player_two_total:
+            return self.player_one
+        elif player_two_total > player_one_total:
+            return self.player_two
+        else:
+            return None
+
+    '''
+    Checks if the game is over
+
+    Return:
+        (bool) True if the game has ended, False otherwise
+    '''
+
+    def is_game_over(self) -> bool:
+        player_one_pits_sum = sum(self.board[:6])
+        player_two_pits_sum = sum(self.board[7:13])
+
+        if player_one_pits_sum == 0 or player_two_pits_sum == 0:
+            return True
+
+        return False
+
+    '''
+    Controls the game play by alternating players' turns and updating the board
+
+    Arguments:
+        player_index
+    '''
 
     def play_game(self, player_index: int, pit_index: int) -> None:
+        # Get the player's store and pits to use in the current turn
+        current_player_store_index = None
+        current_player_pit_indicies = None
+        opponent_player_pit_indicies = None
+
         # Get the pit index which the player will pick their seeds from
         start_index = None
 
         if player_index == 1:
+            current_player_store_index = PLAYER_ONE_STORE_INDEX
+            current_player_pit_indicies = PLAYER_ONE_PIT_INDICIES
+            opponent_player_pit_indicies = PLAYER_TWO_PIT_INDICIES
             start_index = PLAYER_ONE_PIT_INDICIES[pit_index - 1]
         else:
+            current_player_store_index = PLAYER_TWO_STORE_INDEX
+            current_player_pit_indicies = PLAYER_TWO_PIT_INDICIES
+            opponent_player_pit_indicies = PLAYER_ONE_PIT_INDICIES
             start_index = PLAYER_TWO_PIT_INDICIES[pit_index - 1]
 
-        self.update_board(start_index)
+        last_pit_index = self.update_board(start_index)
+
+        if (last_pit_index in current_player_pit_indicies) and self.board[last_pit_index] == 1:
+            # Get the position of the last_pit_index in the player's indicies list
+            current_player_pit_index_pos = current_player_pit_indicies.index(
+                last_pit_index)
+            opponent_player_pit_index = opponent_player_pit_indicies[current_player_pit_index_pos]
+
+            # Update the current player's store
+            self.board[current_player_store_index] = self.board[current_player_store_index] + \
+                self.board[opponent_player_pit_index] + 1
+
+            # Clear the current player's last pit to sow a seed
+            self.board[last_pit_index] = 0
+
+            # Clear the opponent player's pit to have been grabbed
+            self.board[opponent_player_pit_index] = 0
+
+        return last_pit_index
 
 
 class Player():
@@ -124,30 +191,69 @@ class Player():
         return self.name
 
 
+'''
+Validates the player's input to check if the selected pit is valid
+'''
+
+
+def is_play_valid(selected_pit: str) -> bool:
+    # Check if the input is an integer
+    if selected_pit.isdigit():
+        selected_pit = int(selected_pit)
+
+        # Check if the pit index is valid
+        if selected_pit <= 0 or selected_pit > 6:
+            print("Invalid play! Please enter a number between 1 and 6 to continue")
+
+            return False
+        else:
+            return True
+    else:
+        print("Invalid play! Please enter a number to continue")
+
+        return False
+
+
+# Initialize the players
+player_one_name = input("Enter player 1 name: ")
+player_one = Player(player_one_name)
+
+player_two_name = input("Enter player 2 name: ")
+player_two = Player(player_two_name)
+
+# Keeps track of the current player
+player_index = 1
+
 # Create the game
-game = Ayoayo()
+game = Ayoayo(player_one, player_two)
 
-# # Initialize player 1
-# player_name = input("Enter player 1 name: ")
-# game.player_one = Player(player_name)
+game.print_board()
 
-# # Initialize player 2
-# player_name = input("Enter player 2 name: ")
-# game.player_one = Player(player_name)
+while not game.is_game_over():
+    # Keep track of the current player's pit indicies
+    current_player_store_index = PLAYER_ONE_STORE_INDEX if player_index == 1 else PLAYER_TWO_STORE_INDEX
 
-# # Start the game play
-# pit_index = input("Player 1 take a turn: ")
+    pit_index = input("Player {} take a turn: ".format(player_index))
 
-# # Check if the input is an integer
-# if pit_index.isdigit():
-#     pit_index = int(pit_index)
+    if is_play_valid(pit_index):
+        selected_pit = int(pit_index)
 
-#     # Check if the pit index is valid
-#     if pit_index <= 0 or pit_index > 6:
-#         print("Invalid play! Please enter a number between 1 and 6 to continue")
-#     else:
-#         game.play_game(1, pit_index)
-# else:
-#     print("Invalid play! Please enter a number to continue")
+        last_pit_index = game.play_game(player_index, selected_pit)
 
-game.play_game(2, 6)
+        game.print_board()
+
+        if last_pit_index == current_player_store_index:
+            continue
+        else:
+            # Change player's turn
+            player_index = 2 if player_index == 1 else 1
+    else:
+        continue
+
+# Determine the winner of the game
+winner = game.return_winner()
+
+if winner:
+    print("Winner is player {}: {}".format(player_index, winner))
+else:
+    print("It's a tie")
