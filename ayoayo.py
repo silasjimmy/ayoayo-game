@@ -1,10 +1,6 @@
-from typing import List, Any
-
-# Keeps track of the players' pit and store positions in the game board
-PLAYER_ONE_STORE_INDEX = 6
-PLAYER_TWO_STORE_INDEX = 13
-PLAYER_ONE_PIT_INDICIES = [0, 1, 2, 3, 4, 5]
-PLAYER_TWO_PIT_INDICIES = [7, 8, 9, 10, 11, 12]
+from typing import Any
+from constants import PLAYER_ONE_PIT_INDICIES, PLAYER_TWO_PIT_INDICIES, PLAYER_ONE_STORE_INDEX, PLAYER_TWO_STORE_INDEX
+from player import Player
 
 
 class Ayoayo():
@@ -174,86 +170,3 @@ class Ayoayo():
             self.board[opponent_player_pit_index] = 0
 
         return last_pit_index
-
-
-class Player():
-    def __init__(self, name: str) -> None:
-        self.name = name
-
-    '''
-    Creates a string representation of the Player object
-
-    return:
-        (str) name of the player
-    '''
-
-    def __str__(self) -> str:
-        return self.name
-
-
-'''
-Validates the player's input to check if the selected pit is valid
-'''
-
-
-def is_play_valid(selected_pit: str) -> bool:
-    # Check if the input is an integer
-    if selected_pit.isdigit():
-        selected_pit = int(selected_pit)
-
-        # Check if the pit index is valid
-        if selected_pit <= 0 or selected_pit > 6:
-            print("Invalid play! Please enter a number between 1 and 6 to continue")
-
-            return False
-        else:
-            return True
-    else:
-        print("Invalid play! Please enter a number to continue")
-
-        return False
-
-
-# Initialize the players
-player_one_name = input("Enter player 1 name: ")
-player_one = Player(player_one_name)
-
-player_two_name = input("Enter player 2 name: ")
-player_two = Player(player_two_name)
-
-# Keeps track of the current player
-player_index = 1
-
-# Create the game
-game = Ayoayo(player_one, player_two)
-
-game.print_board()
-
-while not game.is_game_over():
-    # Keep track of the current player's pit indicies
-    current_player_store_index = PLAYER_ONE_STORE_INDEX if player_index == 1 else PLAYER_TWO_STORE_INDEX
-
-    pit_index = input("Player {} take a turn: ".format(player_index))
-
-    if is_play_valid(pit_index):
-        selected_pit = int(pit_index)
-
-        last_pit_index = game.play_game(player_index, selected_pit)
-
-        game.print_board()
-
-        if last_pit_index == current_player_store_index:
-            continue
-        else:
-            # Change player's turn
-            player_index = 2 if player_index == 1 else 1
-    else:
-        continue
-
-# Determine the winner of the game
-winner = game.return_winner()
-
-if winner:
-    print("Winner is player {}: {}".format(player_index, winner))
-else:
-    print("It's a tie")
