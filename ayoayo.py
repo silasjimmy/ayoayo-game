@@ -4,12 +4,12 @@ from player import Player
 
 
 class Ayoayo():
-    def __init__(self, player_one: Any, player_two: Any) -> None:
+    def __init__(self, player_one: Any, player_two: Any, seeds: int) -> None:
         self.board = []
         self.player_one = player_one
         self.player_two = player_two
 
-        self.create_board()
+        self.create_board(seeds)
 
     '''
     Initializes the board when the game begins.
@@ -17,14 +17,14 @@ class Ayoayo():
     Creates 12 pits with 4 seeds in each pit and 2 stores with 0 seeds in each store
     '''
 
-    def create_board(self) -> None:
+    def create_board(self, seeds) -> None:
         for x in range(14):
             if x == PLAYER_ONE_STORE_INDEX or x == PLAYER_TWO_STORE_INDEX:
                 # Set the players stores to 0
                 self.board.append(0)
             else:
-                # Set the pits to 4 seeds each
-                self.board.append(3)
+                # Set the pits to `seeds` seeds each
+                self.board.append(seeds)
 
     '''
     Updates the board state once a player makes a move
@@ -87,6 +87,8 @@ class Ayoayo():
             player 2:
             store: {}
             {}
+
+            Game has not ended
             '''.format(self.board[6], self.board[:6], self.board[13], self.board[7:13])
         )
 

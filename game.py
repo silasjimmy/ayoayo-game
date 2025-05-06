@@ -2,8 +2,19 @@ from constants import PLAYER_ONE_STORE_INDEX, PLAYER_TWO_STORE_INDEX
 from utils import is_play_valid
 from ayoayo import Ayoayo
 from player import Player
+import argparse
 
 if __name__ == "__main__":
+    # Define the CLI argument parser
+    parser = argparse.ArgumentParser(
+        description="Specify the number of seed in each pit")
+    parser.add_argument(
+        '-s', '--seeds', help='number of seeds to initialize in each pit', default=3)
+
+    # Obtain the number of seeds to initialize in each pit, default is 3
+    args = parser.parse_args()
+    seeds = int(args.seeds)
+
     # Initialize the players
     player_one_name = input("Enter player 1 name: ")
     player_one = Player(player_one_name)
@@ -15,7 +26,7 @@ if __name__ == "__main__":
     player_index = 1
 
     # Create the game
-    game = Ayoayo(player_one, player_two)
+    game = Ayoayo(player_one, player_two, seeds)
 
     game.print_board()
 
