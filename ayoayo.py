@@ -2,7 +2,9 @@ from typing import Any
 from constants import PLAYER_ONE_PIT_INDICIES, PLAYER_TWO_PIT_INDICIES, PLAYER_ONE_STORE_INDEX, PLAYER_TWO_STORE_INDEX
 from player import Player
 
-
+'''
+Defines the Ayoayo game
+'''
 class Ayoayo():
     def __init__(self, player_one: Any, player_two: Any, seeds: int) -> None:
         self.board = []
@@ -14,9 +16,9 @@ class Ayoayo():
     '''
     Initializes the board when the game begins.
 
-    Creates 12 pits with 4 seeds in each pit and 2 stores with 0 seeds in each store
+    Arguments:
+        seeds (int): the number of seeds to place in each pit
     '''
-
     def create_board(self, seeds) -> None:
         for x in range(14):
             if x == PLAYER_ONE_STORE_INDEX or x == PLAYER_TWO_STORE_INDEX:
@@ -35,7 +37,6 @@ class Ayoayo():
     Return:
         drop_index (int): the last pit index the player has sowed their seed
     '''
-
     def update_board(self, start_index: int) -> int:
         # Get the number of seeds from the selected pit
         seeds = self.board[start_index]
@@ -63,20 +64,18 @@ class Ayoayo():
     '''
     Creates a player for the game
 
-    parameter:
+    Arguments:
         player_name (str) name of the player to create
 
-    return:
+    Return:
         Player (obj) a player object
     '''
-
     def create_player(self, player_name: str) -> Any:
         return Player(player_name)
 
     '''
     Prints the current state of the board
     '''
-
     def print_board(self) -> None:
         print(
             '''
@@ -98,7 +97,6 @@ class Ayoayo():
     Return:
         (obj) a Player object if either player is the winner, None if it is a tie
     '''
-
     def return_winner(self) -> Any:
         player_one_total = sum(self.board[:7])
         player_two_total = sum(self.board[7:])
@@ -116,7 +114,6 @@ class Ayoayo():
     Return:
         (bool) True if the game has ended, False otherwise
     '''
-
     def is_game_over(self) -> bool:
         player_one_pits_sum = sum(self.board[:6])
         player_two_pits_sum = sum(self.board[7:13])
@@ -130,9 +127,12 @@ class Ayoayo():
     Controls the game play by alternating players' turns and updating the board
 
     Arguments:
-        player_index
-    '''
+        player_index (int): the current player
+        pit_index (int): the pit position the current player chose to pick seeds from
 
+    Return:
+        last_pit_index (int): the index of the pit the current player finishes sowing their seeds
+    '''
     def play_game(self, player_index: int, pit_index: int) -> None:
         # Get the player's store and pits to use in the current turn
         current_player_store_index = None

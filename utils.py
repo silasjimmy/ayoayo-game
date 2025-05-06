@@ -1,8 +1,9 @@
 '''
 Validates the player's input to check if the selected pit is valid
+
+Arguments:
+    selected_pit (int): the pit position on the board which the player chooses to pick their seeds from
 '''
-
-
 def is_play_valid(selected_pit: str) -> bool:
     # Check if the input is an integer
     if selected_pit.isdigit():
